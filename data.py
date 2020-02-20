@@ -73,17 +73,17 @@ def classes(mask_predict): # mask_predict has shape (256,256,6) , because it's g
 # Lý thuyết : Pixel là phần tử nhỏ nhất cấu thành nên ảnh và video trong các thiết bị điện tử
 # nên px có mối quan hệ với các đại lượng đo chiều dài khác . Nhưng px không mang một mối quan hệ xác đinh
 # nào cả . Nên ta cần chuẩn hóa như sau. Với bài toán đang làm thì thông số người ta đưa ra 1 ảnh Ortho(RGB)
-# có kích thước 6k*6k*3 , trong đó 1px = 0.012 mm . => cần chuẩn hóa về mối quan hệ này.
+# có kích thước 6k*6k*3 , trong đó 1px = 0.6 m . => cần chuẩn hóa về mối quan hệ này.
 # Tính toán S trên ảnh phân vùng :
-# S_Building = Tổng số pixel mà phân vùng Building đó chiếm = n * 1px * 1px = n * 0.012^2 (mm) trong đó n là số px của phần vùng BUilding
-# Ngoài ra người ta còn cung cấp với mức chuẩn hóa đã cho (1px = 0.012mm) thì Ty le anh chup ve tinh 1 : 8 000 000
-# ==> S_Building_real = S_Building * 8 000 000 = ??? (mm^2)
+# S_Building = Tổng số pixel mà phân vùng Building đó chiếm = n * 1px * 1px = n * 0.6^2 (m^2) trong đó n là số px của phần vùng BUilding
+# Ngoài ra người ta còn cung cấp với mức chuẩn hóa đã cho (1px = 0.6mm) thì Ty le anh chup ve tinh 1 : 8 000 000
+# ==> S_Building_real = S_Building * 8 000 000 = ??? (m^2)
 def Square(array_mask):  # shape array_mask = (256,256,6)
-  S, px2 = [], 0.012*0.012
+  S, px2 = [], 0.6*0.6
   #array_mask = array_mask.reshape(array_mask, (256,256,6))
-  S_Building = np.sum(array_mask[...,0])*8000000*px2   # (mm^2)
-  S_Road = np.sum(array_mask[...,5])*8000000*px2       # (mm^2)
-  S_Tree = np.sum(array_mask[...,2])*8000000*px2       # (mm^2)
+  S_Building = np.sum(array_mask[...,0])*8000000*px2   # (m^2)
+  S_Road = np.sum(array_mask[...,5])*8000000*px2       # (m^2)
+  S_Tree = np.sum(array_mask[...,2])*8000000*px2       # (m^2)
   return [S_Building, S_Road, S_Tree]
 
 def saveText(save_path, npyfile):   #### Lưu text có thông tin về số lớp của ảnh seg và diện tích từng vùng
